@@ -36,25 +36,10 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Init"
-        env:
-          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.ARM_CLIENT_SECRET }}
-          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.ARM_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.ARM_SUBSCRIPTION_ID }}
         run: terraform init
 
       - name: "Terraform Plan"
-        env:
-          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.ARM_CLIENT_SECRET }}
-          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.ARM_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.ARM_SUBSCRIPTION_ID }}
         run: terraform plan
 
       - name: "Terraform Apply"
-        env:
-          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.ARM_CLIENT_SECRET }}
-          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.ARM_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.ARM_SUBSCRIPTION_ID }}
         run: terraform apply -auto-approve
