@@ -1,4 +1,4 @@
-name: "Terraform Apply with Service Principal JSON Credentials"
+name: "Terraform Apply with JSON Credentials"
 
 on:
   push:
@@ -18,16 +18,43 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: "Azure Login with JSON Creds"
+      - name: "Extract Azure Credentials"
+        id: azure_creds
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+        run: |
+          echo "$AZURE_CREDENTIALS" > azure_credential.json
+          export ARM_CLIENT_ID=$(jq -r '.clientId' azure_credential.json)
+          export ARM_CLIENT_SECRET=$(jq -r '.clientSecret' azure_credential.json)
+          export ARM_TENANT_ID=$(jq -r '.tenantId' azure_credential.json)
+          export ARM_SUBSCRIPTION_ID=$(jq -r '.subscriptionId' azure_credential.json)
+        shell: bash
+
+      - name: "Azure Login"
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Init"
+        env:
+          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.ARM_SUBSCRIPTION_ID }}
         run: terraform init
 
       - name: "Terraform Plan"
+        env:
+          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.ARM_SUBSCRIPTION_ID }}
         run: terraform plan
 
       - name: "Terraform Apply"
+        env:
+          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.ARM_SUBSCRIPTION_ID }}
         run: terraform apply -auto-approve
