@@ -15,6 +15,6 @@ provider "azurerm" {
 
 
 resource "azurerm_resource_group" "rg" {
-  name     = "example-resources"
+  name     = "terraform-github-actions"
   location = "East US"
 }
