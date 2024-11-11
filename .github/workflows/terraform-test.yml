@@ -1,14 +1,6 @@
-name: "Terraform Apply with ARM Environment Variables"
-
-on:
-  push:
-    branches:
-      - main
-
 jobs:
   terraform:
     runs-on: ubuntu-latest
-
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v3
@@ -29,11 +21,6 @@ jobs:
           echo "::set-output name=tenant_id::$(jq -r '.tenantId' azure_credential.json)"
           echo "::set-output name=subscription_id::$(jq -r '.subscriptionId' azure_credential.json)"
         shell: bash
-
-      - name: "Azure Login"
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Init"
         env:
