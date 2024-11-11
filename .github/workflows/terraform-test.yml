@@ -8,6 +8,11 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+      TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+      TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     steps:
       - name: "Checkout code"
@@ -18,36 +23,12 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: "Set Environment Variables"
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-        run: |
-          # Extract values from GitHub secrets
-          echo "::set-output name=client_id::${{ secrets.AZURE_CLIENT_ID }}"
-          echo "::set-output name=client_secret::${{ secrets.AZURE_CLIENT_SECRET }}"
-          echo "::set-output name=tenant_id::${{ secrets.AZURE_TENANT_ID }}"
-          echo "::set-output name=subscription_id::${{ secrets.AZURE_SUBSCRIPTION_ID }}"
-
       - name: "Terraform Init"
-        env:
-          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
-          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: terraform init
 
       - name: "Terraform Plan"
-        env:
-          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
-          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: terraform plan
 
       - name: "Terraform Apply"
-        env:
-          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
-          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        if: github.ref == 'refs/heads/main'  # Only apply on main branch
         run: terraform apply -auto-approve
