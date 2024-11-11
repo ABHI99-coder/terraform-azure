@@ -31,24 +31,24 @@ jobs:
 
       - name: "Terraform Init"
         env:
-          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.client_id }}
-          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.client_secret }}
-          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.tenant_id }}
-          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.subscription_id }}
+          TF_VAR_client_id: ${{ steps.azure_creds.outputs.client_id }}
+          TF_VAR_client_secret: ${{ steps.azure_creds.outputs.client_secret }}
+          TF_VAR_tenant_id: ${{ steps.azure_creds.outputs.tenant_id }}
+          TF_VAR_subscription_id: ${{ steps.azure_creds.outputs.subscription_id }}
         run: terraform init
 
       - name: "Terraform Plan"
         env:
-          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.client_id }}
-          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.client_secret }}
-          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.tenant_id }}
-          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.subscription_id }}
+          TF_VAR_client_id: ${{ steps.azure_creds.outputs.client_id }}
+          TF_VAR_client_secret: ${{ steps.azure_creds.outputs.client_secret }}
+          TF_VAR_tenant_id: ${{ steps.azure_creds.outputs.tenant_id }}
+          TF_VAR_subscription_id: ${{ steps.azure_creds.outputs.subscription_id }}
         run: terraform plan
 
       - name: "Terraform Apply"
         env:
-          ARM_CLIENT_ID: ${{ steps.azure_creds.outputs.client_id }}
-          ARM_CLIENT_SECRET: ${{ steps.azure_creds.outputs.client_secret }}
-          ARM_TENANT_ID: ${{ steps.azure_creds.outputs.tenant_id }}
-          ARM_SUBSCRIPTION_ID: ${{ steps.azure_creds.outputs.subscription_id }}
+          TF_VAR_client_id: ${{ steps.azure_creds.outputs.client_id }}
+          TF_VAR_client_secret: ${{ steps.azure_creds.outputs.client_secret }}
+          TF_VAR_tenant_id: ${{ steps.azure_creds.outputs.tenant_id }}
+          TF_VAR_subscription_id: ${{ steps.azure_creds.outputs.subscription_id }}
         run: terraform apply -auto-approve
